@@ -1,5 +1,5 @@
-import { useMemo, type ReactNode } from "react";
-import { Monitor, Plus, ChevronDown } from "lucide-react";
+import { useMemo, type ReactNode, type MouseEvent } from "react";
+import { Monitor, Plus, ChevronUp, ChevronDown } from "lucide-react";
 import { useStudio } from "../state/store";
 import type { SyncStatus } from "../state/store";
 import { walk, uid } from "../core/doc";
@@ -65,7 +65,7 @@ export function EditMode() {
             <h2 className="mb-2 px-1 text-[13px] font-bold uppercase tracking-wider text-[#a6712f]">{sec.titleEn}{sec.titleSub ? ` · ${sec.titleSub}` : ""}</h2>
             <div className="space-y-2">
               {sec.items.map((it, i) => (
-                <ItemCard key={it.id} sectionId={sec.id} index={i} item={it} />
+                <ItemCard key={it.id} sectionId={sec.id} index={i} count={sec.items.length} item={it} />
               ))}
             </div>
             <AddButton onClick={() => useStudio.getState().updateBlock(sec.id, (b) => void (b as SectionBlock).items.push({ id: uid("it"), nameEn: "New", nameKr: "새 메뉴", price: "0.0" }))}>메뉴 추가</AddButton>
@@ -77,7 +77,7 @@ export function EditMode() {
             <h2 className="mb-2 px-1 text-[13px] font-bold uppercase tracking-wider text-[#a6712f]">{hd.titleEn} · 원두</h2>
             <div className="space-y-2">
               {hd.beans.map((bn, i) => (
-                <BeanCard key={bn.id} blockId={hd.id} index={i} bean={bn} />
+                <BeanCard key={bn.id} blockId={hd.id} index={i} count={hd.beans.length} bean={bn} />
               ))}
             </div>
             <AddButton onClick={() => useStudio.getState().updateBlock(hd.id, (b) => void (b as HandDripBlock).beans.push({ id: uid("bn"), nameEn: "New Bean", price: "6.0" }))}>원두 추가</AddButton>
@@ -108,9 +108,10 @@ export function EditMode() {
 
 /* ----------------------------------------------------------------- cards -- */
 
-function ItemCard({ sectionId, index, item }: { sectionId: string; index: number; item: MenuItem }) {
+function ItemCard({ sectionId, index, count, item }: { sectionId: string; index: number; count: number; item: MenuItem }) {
   const updateBlock = useStudio((s) => s.updateBlock);
   const set = (recipe: (it: MenuItem) => void) => updateBlock(sectionId, (b) => { const it = (b as SectionBlock).items[index]; if (it) recipe(it); });
+  const move = (dir: -1 | 1) => updateBlock(sectionId, (b) => { const arr = (b as SectionBlock).items; const j = index + dir; if (j < 0 || j >= arr.length) return; [arr[index], arr[j]] = [arr[j], arr[index]]; });
   return (
     <details className={`group overflow-hidden rounded-xl border ${item.hidden ? "border-[#e6e2da] bg-[#f1eee8] opacity-70" : "border-[#e6e2da] bg-white"}`}>
       <summary className="flex cursor-pointer list-none items-center gap-2 px-3 py-3">
@@ -120,7 +121,7 @@ function ItemCard({ sectionId, index, item }: { sectionId: string; index: number
           {item.hidden ? <span className="text-[#b0aba0]"> · 숨김</span> : null}
         </span>
         <span className="shrink-0 text-[14px] font-semibold text-[#45413a]">{item.price}</span>
-        <ChevronDown className="size-4 shrink-0 text-[#b0aba0] transition-transform group-open:rotate-180" />
+        <Reorder index={index} count={count} onMove={move} />
       </summary>
       <div className="space-y-2.5 border-t border-[#efeae2] px-3 py-3">
         <Field label="이름 (영문)"><MInput value={item.nameEn} onChange={(v) => set((it) => void (it.nameEn = v))} /></Field>
@@ -137,9 +138,10 @@ function ItemCard({ sectionId, index, item }: { sectionId: string; index: number
   );
 }
 
-function BeanCard({ blockId, index, bean }: { blockId: string; index: number; bean: Bean }) {
+function BeanCard({ blockId, index, count, bean }: { blockId: string; index: number; count: number; bean: Bean }) {
   const updateBlock = useStudio((s) => s.updateBlock);
   const set = (recipe: (bn: Bean) => void) => updateBlock(blockId, (b) => { const bn = (b as HandDripBlock).beans[index]; if (bn) recipe(bn); });
+  const move = (dir: -1 | 1) => updateBlock(blockId, (b) => { const arr = (b as HandDripBlock).beans; const j = index + dir; if (j < 0 || j >= arr.length) return; [arr[index], arr[j]] = [arr[j], arr[index]]; });
   return (
     <details className={`group overflow-hidden rounded-xl border ${bean.hidden ? "border-[#e6e2da] bg-[#f1eee8] opacity-70" : "border-[#e6e2da] bg-white"}`}>
       <summary className="flex cursor-pointer list-none items-center gap-2 px-3 py-3">
@@ -149,7 +151,7 @@ function BeanCard({ blockId, index, bean }: { blockId: string; index: number; be
           {bean.hidden ? <span className="text-[#b0aba0]"> · 숨김</span> : null}
         </span>
         <span className="shrink-0 text-[14px] font-semibold text-[#45413a]">{bean.price}</span>
-        <ChevronDown className="size-4 shrink-0 text-[#b0aba0] transition-transform group-open:rotate-180" />
+        <Reorder index={index} count={count} onMove={move} />
       </summary>
       <div className="space-y-2.5 border-t border-[#efeae2] px-3 py-3">
         <Field label="이름"><MInput value={bean.nameEn} onChange={(v) => set((bn) => void (bn.nameEn = v))} /></Field>
@@ -201,6 +203,16 @@ function RowActions({ hidden, onToggle, onDelete }: { hidden?: boolean; onToggle
         삭제
       </button>
     </div>
+  );
+}
+
+function Reorder({ index, count, onMove }: { index: number; count: number; onMove: (d: -1 | 1) => void }) {
+  const stop = (e: MouseEvent) => { e.preventDefault(); e.stopPropagation(); };
+  return (
+    <span className="-my-1 flex shrink-0 flex-col" onClick={stop}>
+      <button onClick={(e) => { stop(e); onMove(-1); }} disabled={index === 0} aria-label="위로 이동" className="px-1 text-[#b0aba0] active:text-[#c2603f] disabled:opacity-25"><ChevronUp className="size-4" /></button>
+      <button onClick={(e) => { stop(e); onMove(1); }} disabled={index === count - 1} aria-label="아래로 이동" className="px-1 text-[#b0aba0] active:text-[#c2603f] disabled:opacity-25"><ChevronDown className="size-4" /></button>
+    </span>
   );
 }
 

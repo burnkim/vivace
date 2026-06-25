@@ -235,7 +235,7 @@ function BeanRow({ b, detailed, compact, sizes, headWeight, display, body, price
   const px = (n: number) => n * scale;
   const copyW = `${tokens.beanCopyWidth ?? 66}%`;
   const showGrade = detailed || !!compact.grade; // grade always shows in detailed
-  const headEl = b.headCopy && <div style={{ marginTop: px(5), maxWidth: copyW, fontFamily: body, fontWeight: headWeight, fontSize: px(sizes.head), color: tokens.color.ink }}>&ldquo;{b.headCopy}&rdquo;</div>;
+  const headEl = b.headCopy && <div style={{ marginTop: px(5), maxWidth: copyW, fontFamily: body, fontWeight: headWeight, fontSize: px(sizes.head), color: tokens.color.ink }}>{b.headCopy}</div>;
   const descEl = b.desc && <div style={{ marginTop: px(3), maxWidth: copyW, fontFamily: body, fontSize: px(sizes.desc), color: tokens.color.muted, lineHeight: 1.55 }}>{b.desc}</div>;
   return (
     <div>

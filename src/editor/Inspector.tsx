@@ -213,6 +213,18 @@ const SLOT_KEYS = ["style", "itemStyle", "priceStyle", "descStyle"] as const;
 function SectionContent({ block, badgeOpts }: { block: SectionBlock; badgeOpts: { value: string; label: string }[] }) {
   const updateBlock = useStudio((s) => s.updateBlock);
   const upd = (recipe: (b: SectionBlock) => void) => updateBlock(block.id, (b) => recipe(b as SectionBlock));
+  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 4 } }));
+  const onItemDragEnd = (e: DragEndEvent) => {
+    const { active, over } = e;
+    if (!over || active.id === over.id) return;
+    upd((b) => {
+      const ids = b.items.map((x) => x.id);
+      const from = ids.indexOf(String(active.id));
+      const to = ids.indexOf(String(over.id));
+      if (from < 0 || to < 0) return;
+      b.items = arrayMove(b.items, from, to);
+    });
+  };
 
   const setSlot = (slot: (typeof SLOT_KEYS)[number], key: keyof Style, v: number | undefined) =>
     upd((b) => {
@@ -250,11 +262,16 @@ function SectionContent({ block, badgeOpts }: { block: SectionBlock; badgeOpts: 
         </Collapsible>
       ) : (
         <Collapsible title={`메뉴 항목 (${block.items.length})`}>
-          <div className="space-y-2">
-            {block.items.map((it, i) => (
-              <ItemEditor key={it.id} index={i} item={it} badgeOpts={badgeOpts} block={block} />
-            ))}
-          </div>
+          <p className="mb-2 text-[10px] text-[#9a958b]">손잡이(⠿)를 드래그해 순서를 바꿉니다.</p>
+          <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={onItemDragEnd}>
+            <SortableContext items={block.items.map((it) => it.id)} strategy={verticalListSortingStrategy}>
+              <div className="space-y-2">
+                {block.items.map((it, i) => (
+                  <ItemEditor key={it.id} index={i} item={it} badgeOpts={badgeOpts} block={block} />
+                ))}
+              </div>
+            </SortableContext>
+          </DndContext>
           <button
             onClick={() => upd((b) => void b.items.push({ id: uid("it"), nameEn: "New", nameKr: "새 메뉴", price: "0.0" }))}
             className="mt-2 w-full rounded-md border border-dashed border-[#e6e2da] py-1.5 text-[12px] text-[#837e74] hover:border-[#c2603f] hover:text-[#c2603f]"
@@ -269,6 +286,7 @@ function SectionContent({ block, badgeOpts }: { block: SectionBlock; badgeOpts: 
 
 function ItemEditor({ item, index, block, badgeOpts }: { item: SectionBlock["items"][number]; index: number; block: SectionBlock; badgeOpts: { value: string; label: string }[] }) {
   const updateBlock = useStudio((s) => s.updateBlock);
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: item.id });
   const upd = (recipe: (it: SectionBlock["items"][number]) => void) =>
     updateBlock(block.id, (b) => {
       const target = (b as SectionBlock).items[index];
@@ -277,9 +295,10 @@ function ItemEditor({ item, index, block, badgeOpts }: { item: SectionBlock["ite
   const remove = () => updateBlock(block.id, (b) => void (b as SectionBlock).items.splice(index, 1));
 
   return (
-    <details className="rounded-md border border-[#e6e2da] bg-[#faf9f6]">
-      <summary className="flex cursor-pointer items-center justify-between px-2 py-1.5 text-[12px] text-[#45413a]">
-        <span className="truncate">{item.nameEn || "(이름 없음)"} · {item.price}</span>
+    <details ref={setNodeRef} style={{ transform: CSS.Transform.toString(transform), transition, opacity: isDragging ? 0.5 : 1 }} className="rounded-md border border-[#e6e2da] bg-[#faf9f6]">
+      <summary className="flex cursor-pointer items-center gap-1 px-2 py-1.5 text-[12px] text-[#45413a]">
+        <button {...attributes} {...listeners} onClick={(e) => e.preventDefault()} title="드래그로 순서 변경" className="cursor-grab text-[#b0aba0] hover:text-[#837e74] active:cursor-grabbing"><GripVertical className="size-3.5" /></button>
+        <span className="min-w-0 flex-1 truncate">{item.nameEn || "(이름 없음)"} · {item.price}</span>
         <button onClick={(e) => { e.preventDefault(); remove(); }} className="text-[#c84a30] hover:text-red-400"><Trash2 className="size-3.5" /></button>
       </summary>
       <div className="space-y-2 px-2 pb-2">
