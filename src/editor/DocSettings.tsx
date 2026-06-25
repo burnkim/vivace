@@ -3,10 +3,11 @@ import { X, Plus, Trash2 } from "lucide-react";
 import type { BadgeDef, FontDef, MenuDocument } from "../core/types";
 import { uid } from "../core/doc";
 import { badgeStyle } from "../render/badge";
+import { hashPin } from "../PinGate";
 import { useStudio } from "../state/store";
 import { Field, NumInput, Range, Row, Segmented, Select, ColorInput, TextInput } from "./controls";
 
-type Tab = "fonts" | "badges" | "type";
+type Tab = "fonts" | "badges" | "type" | "security";
 
 /** Renders inside the right panel (replaces the inspector) so edits preview live
     on the canvas. */
@@ -19,14 +20,15 @@ export function DocSettings({ onClose }: { onClose: () => void }) {
         <button onClick={onClose} title="닫기 (인스펙터로)" className="rounded p-1 text-[#837e74] hover:bg-[#f1eee8] hover:text-[#2a2723]"><X className="size-4" /></button>
       </div>
       <div className="flex gap-1 border-b border-[#ebe7df] px-3 py-2">
-        {([["type", "글로벌 타입"], ["fonts", "폰트"], ["badges", "뱃지"]] as [Tab, string][]).map(([t, label]) => (
-          <button key={t} onClick={() => setTab(t)} className={`flex-1 rounded-md px-2 py-1 text-[12px] transition-colors ${tab === t ? "bg-[#f6ece4] font-medium text-[#a94e31]" : "text-[#837e74] hover:bg-[#f4f2ed]"}`}>{label}</button>
+        {([["type", "타입"], ["fonts", "폰트"], ["badges", "뱃지"], ["security", "보안"]] as [Tab, string][]).map(([t, label]) => (
+          <button key={t} onClick={() => setTab(t)} className={`flex-1 whitespace-nowrap rounded-md px-2 py-1 text-[12px] transition-colors ${tab === t ? "bg-[#f6ece4] font-medium text-[#a94e31]" : "text-[#837e74] hover:bg-[#f4f2ed]"}`}>{label}</button>
         ))}
       </div>
       <div className="studio-scroll min-h-0 flex-1 overflow-y-auto p-3">
         {tab === "type" && <TypeScale />}
         {tab === "fonts" && <FontsTab />}
         {tab === "badges" && <BadgesTab />}
+        {tab === "security" && <SecurityTab />}
       </div>
     </div>
   );
@@ -178,6 +180,48 @@ function BadgesTab() {
         </div>
       ))}
       <button onClick={() => updateDoc((d) => void d.badges.push({ id: uid("badge"), label: "New", bg: "#111111", fg: "#ffffff", shape: "pill" }))} className="flex w-full items-center justify-center gap-1.5 rounded-md border border-dashed border-[#e6e2da] py-2 text-[12px] text-[#837e74] hover:border-[#c2603f] hover:text-[#c2603f]"><Plus className="size-4" /> 뱃지 추가</button>
+    </div>
+  );
+}
+
+/* -------------------------------------------------------------- Security -- */
+
+function SecurityTab() {
+  const pinHash = useStudio((s) => s.doc.security?.pinHash);
+  const updateDoc = useStudio((s) => s.updateDoc);
+  const [pin, setPin] = useState("");
+  const [confirm, setConfirm] = useState("");
+  const [done, setDone] = useState(false);
+  const isDefault = !pinHash;
+  const valid = /^\d{6}$/.test(pin) && pin === confirm;
+  const onlyDigits = (v: string) => v.replace(/\D/g, "").slice(0, 6);
+  const pinCls = "w-full rounded-md border border-[#e6e2da] bg-[#faf9f6] px-2 py-2 text-center text-[18px] tracking-[0.4em] text-[#2a2723] outline-none focus:border-[#c2603f] placeholder:tracking-normal placeholder:text-[#bcb6aa]";
+
+  const save = async () => {
+    if (!valid) return;
+    const h = await hashPin(pin);
+    updateDoc((d) => { d.security = { pinHash: h }; });
+    setPin(""); setConfirm(""); setDone(true);
+    setTimeout(() => setDone(false), 2600);
+  };
+
+  return (
+    <div className="space-y-4">
+      <p className="rounded-md bg-[#faf1e7] px-3 py-2 text-[11px] leading-relaxed text-[#a6712f]">
+        앱을 열 때 입력하는 <b>6자리 숫자 비밀번호</b>입니다. 한 번 바꾸면 <b>모든 기기에 함께</b> 적용됩니다. {isDefault && <b className="text-[#c84a30]">지금은 기본값(000000) — 꼭 변경하세요.</b>}
+      </p>
+      <Field label="새 비밀번호 (숫자 6자리)">
+        <input inputMode="numeric" autoComplete="off" maxLength={6} value={pin} onChange={(e) => setPin(onlyDigits(e.target.value))} placeholder="● ● ● ● ● ●" className={pinCls} />
+      </Field>
+      <Field label="비밀번호 확인">
+        <input inputMode="numeric" autoComplete="off" maxLength={6} value={confirm} onChange={(e) => setConfirm(onlyDigits(e.target.value))} placeholder="● ● ● ● ● ●" className={pinCls} />
+      </Field>
+      {pin && confirm && pin !== confirm && <p className="text-[11px] text-[#c84a30]">두 비밀번호가 일치하지 않습니다.</p>}
+      <button onClick={save} disabled={!valid} className="w-full rounded-md bg-[#c2603f] py-2 text-[13px] font-semibold text-white transition-colors hover:bg-[#a94e31] disabled:cursor-not-allowed disabled:opacity-40">
+        비밀번호 변경
+      </button>
+      {done && <p className="text-center text-[12px] font-medium text-[#1d8f5e]">✓ 변경되었습니다. 다음 접속부터 적용돼요.</p>}
+      <p className="text-[10px] leading-relaxed text-[#9a958b]">참고: 링크를 아는 사람은 누구나 접속 화면까지는 볼 수 있고, 이 비밀번호로만 안쪽이 열립니다. 가벼운 잠금이라 완벽한 보안은 아니에요(메뉴 데이터 자체는 공개 키로 읽힘).</p>
     </div>
   );
 }

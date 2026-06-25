@@ -291,4 +291,9 @@ export interface MenuDocument {
   fonts: FontDef[];
   badges: BadgeDef[];
   pages: Page[];
+  /** Access gate. `pinHash` = SHA-256 of `vivace:<6-digit pin>`. Unset ⇒ the
+      default PIN (000000). Synced via the cloud so the gate is the same on every
+      device; a soft deterrent (client-side, data is anon-readable), not strong
+      security. */
+  security?: { pinHash?: string };
 }
