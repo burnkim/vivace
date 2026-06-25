@@ -272,7 +272,13 @@ function PreviewModal({ onClose }: { onClose: () => void }) {
   const page = doc.pages.find((p) => p.id === pid) ?? doc.pages[0];
   const { w, h } = pageSizePx(page);
   return createPortal(
-    <div className="fixed inset-0 z-50 flex flex-col bg-[#2a2723]">
+    // h-[100dvh] (dynamic viewport) instead of inset-0/100vh: on phones the
+    // browser toolbar overlaps the layout viewport, so a 100vh modal is TALLER
+    // than what's visible — the vertically-centered sheet then sits below the
+    // visible centre (big gap on top) and its bottom hides under the toolbar
+    // (must scroll). Dynamic-vh tracks the actually-visible area so the sheet
+    // stays dead-centre in the space below the tab bar on any screen length.
+    <div className="fixed inset-x-0 top-0 z-50 flex h-[100dvh] flex-col bg-[#2a2723]">
       <div className="flex items-center gap-1.5 overflow-x-auto border-b border-black/20 px-3 py-2.5">
         {doc.pages.map((p) => (
           <button key={p.id} onClick={() => setPid(p.id)} className={`shrink-0 whitespace-nowrap rounded-md px-2.5 py-1 text-[12px] ${pid === p.id ? "bg-white text-[#2a2723]" : "bg-white/10 text-white/80"}`}>
