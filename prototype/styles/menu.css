@@ -1,0 +1,139 @@
+/* =====================================================================
+   Vivace Menu — Shared component styles
+   Reused by all layouts. Sizes come from tokens.css; layouts only choose
+   which sections appear and how columns are arranged.
+   ===================================================================== */
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+.page {
+  position: relative;
+  background: var(--c-paper);
+  color: var(--c-ink);
+  font-family: var(--font-sans);
+  padding: var(--pad-page);
+  overflow: hidden;
+}
+/* Exact paper boxes */
+.page.size-a4  { width: 210mm; height: 297mm; }
+.page.size-a3  { width: 297mm; height: 420mm; }
+.page.size-a5  { width: 148mm; height: 210mm; }
+
+/* ---- Wordmark ---- */
+.wordmark {
+  font-family: var(--font-serif);
+  font-weight: 800;
+  font-size: var(--fs-wordmark);
+  letter-spacing: -0.01em;
+  line-height: 1;
+  margin-bottom: calc(40px * var(--scale));
+}
+
+/* ---- Columns ---- */
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: var(--gap-col); }
+.col  { display: flex; flex-direction: column; }
+
+/* ---- Section ---- */
+.section { margin-bottom: var(--gap-section); }
+.section--beverage { margin-bottom: var(--gap-below-bev); }
+.section__head {
+  display: flex; align-items: baseline; justify-content: space-between;
+  border-bottom: var(--rule-w) solid var(--c-line);
+  padding-bottom: calc(8px * var(--scale));
+  margin-bottom: calc(16px * var(--scale));
+}
+.section__title {
+  font-family: var(--font-serif); font-weight: 800;
+  font-size: var(--fs-section); letter-spacing: -0.01em;
+  display: flex; align-items: center; gap: calc(8px * var(--scale));
+}
+.section__sub {
+  font-family: var(--font-serif); font-weight: 700;
+  font-size: var(--fs-sub); letter-spacing: 0.02em; color: var(--c-ink);
+}
+
+/* ---- Item rows (espresso / tea / beverage / dessert) ---- */
+.item {
+  display: grid;
+  grid-template-columns: minmax(0,1fr) auto;
+  align-items: baseline;
+  column-gap: calc(10px * var(--scale));
+  margin-bottom: var(--gap-item);
+}
+.item--desc { margin-bottom: var(--gap-item-desc); }
+.item__main { display: flex; align-items: baseline; gap: calc(10px * var(--scale)); flex-wrap: wrap; }
+.item__en {
+  font-family: var(--font-serif); font-weight: 700;
+  font-size: var(--fs-item-en); letter-spacing: -0.005em; line-height: var(--lh-tight);
+}
+.item__kr {
+  font-family: var(--font-sans); font-weight: 500;
+  font-size: var(--fs-item-kr); color: var(--c-ink);
+}
+.item__price {
+  font-family: var(--font-serif); font-weight: 700;
+  font-size: var(--fs-price); justify-self: end; white-space: nowrap;
+}
+.item__desc {
+  grid-column: 1 / 2;
+  font-size: var(--fs-desc); color: var(--c-muted);
+  margin-top: calc(3px * var(--scale)); line-height: var(--lh-body);
+}
+.item__takeout {
+  display: block; font-family: var(--font-sans); font-weight: 500;
+  font-size: var(--fs-note); color: var(--c-muted); text-align: right;
+  line-height: 1.1;
+}
+
+/* ---- Badges ---- */
+.badge {
+  display: inline-block; vertical-align: middle;
+  font-family: var(--font-sans); font-weight: 600;
+  font-size: var(--fs-badge); letter-spacing: 0.03em;
+  color: var(--c-badge-fg); background: var(--c-badge-bg);
+  border-radius: 999px; padding: calc(2px * var(--scale)) calc(7px * var(--scale));
+  line-height: 1.4;
+}
+
+/* ---- Hand drip (filter coffee) ---- */
+.drip { margin-bottom: var(--gap-item-desc); }
+.drip__head {
+  display: flex; align-items: baseline; gap: calc(8px * var(--scale));
+}
+.drip__name {
+  font-family: var(--font-serif); font-weight: 700;
+  font-size: var(--fs-item-en); line-height: var(--lh-tight); flex: 1 1 auto;
+}
+.drip__process { font-family: var(--font-serif); font-weight: 400; font-size: var(--fs-process); }
+.drip__price { font-family: var(--font-serif); font-weight: 700; font-size: var(--fs-price); white-space: nowrap; }
+.drip__short { font-size: var(--fs-desc); color: var(--c-muted); margin-top: calc(3px * var(--scale)); }
+.drip__headline {
+  font-family: var(--font-sans); font-weight: 700; font-size: var(--fs-headline);
+  margin-top: calc(5px * var(--scale));
+}
+.drip__long {
+  font-size: var(--fs-long); color: var(--c-muted);
+  margin-top: calc(3px * var(--scale)); line-height: var(--lh-body);
+}
+
+/* ---- Footnotes / notes ---- */
+.footnotes { text-align: right; font-size: var(--fs-note); color: var(--c-ink); margin-top: calc(6px * var(--scale)); }
+.footnotes div { line-height: 1.5; }
+.note-inline { text-align: right; font-size: var(--fs-note); color: var(--c-ink); margin-top: calc(8px * var(--scale)); }
+
+/* ---- Blend boxes ([A]/[B]) ---- */
+.blends { display: grid; grid-template-columns: 1fr 1fr; gap: var(--gap-col); margin-top: var(--gap-section); }
+.blend { border: var(--rule-w) solid var(--c-line); padding: calc(18px * var(--scale)); }
+.blend__title { font-family: var(--font-serif); font-weight: 800; font-size: var(--fs-section); margin-bottom: calc(8px * var(--scale)); }
+.blend__desc { font-size: var(--fs-desc); color: var(--c-ink); line-height: var(--lh-body); }
+
+/* ---- Roasting note (small, bottom-right) ---- */
+.roast {
+  position: absolute; left: auto; right: var(--pad-page);
+  bottom: var(--pad-page); width: 46%; text-align: right;
+}
+.roast__lead { font-family: var(--font-sans); font-weight: 700; font-size: var(--fs-note); line-height: 1.45; }
+.roast__sub  { font-family: var(--font-sans); font-weight: 500; font-size: calc(8px * var(--scale)); color: var(--c-muted); margin-top: calc(2px * var(--scale)); line-height: 1.4; }
+
+/* ---- Droplet logo (R panels) ---- */
+.droplet { width: calc(70px * var(--scale)); margin: 0 auto calc(30px * var(--scale)); display: block; }

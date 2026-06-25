@@ -1,0 +1,53 @@
+/* Font imports must precede everything (incl. the Tailwind import which expands
+   into many rules). Additional fonts are injected at runtime from the registry. */
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap");
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
+@import "tailwindcss";
+
+/* Vivace Menu Studio — light, warm, product-grade theme. */
+:root {
+  --s-bg: #f3f1ec;        /* app background (warm paper) */
+  --s-canvas: #ece9e3;    /* editor canvas backdrop */
+  --s-surface: #ffffff;   /* panels, cards */
+  --s-border: #e6e2da;    /* hairlines */
+  --s-text: #2a2723;      /* primary ink */
+  --s-muted: #837e74;     /* secondary */
+  --s-accent: #c2603f;    /* terracotta brand accent */
+  --s-accent-tint: #f6ece4;
+}
+
+html, body, #root { height: 100%; margin: 0; }
+body {
+  font-family: "Pretendard", -apple-system, "Apple SD Gothic Neo", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  background: var(--s-bg);
+  color: var(--s-text);
+}
+
+/* The rendered menu canvas is a fixed-pixel white sheet; never inherit chrome. */
+[data-menu-sheet] * { box-sizing: border-box; }
+
+/* Block selection chrome (only on interactive canvas) */
+.vstudio-blk { cursor: pointer; }
+[data-menu-sheet] .vstudio-blk:hover { outline: 1px dashed rgba(194, 96, 63, 0.5); outline-offset: 2px; }
+[data-menu-sheet] .vstudio-blk-selected,
+[data-menu-sheet] .vstudio-blk-selected:hover { outline: 2px solid var(--s-accent) !important; outline-offset: 2px; }
+
+/* Print: a single sheet portal'd to <body>, sized in mm (vector text). */
+.print-layer { display: none; }
+/* Force background colors (badge fills, etc.) to print/export — browsers skip
+   them by default, which made badge circles vanish in the PDF. */
+[data-menu-sheet], [data-menu-sheet] * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+@media print {
+  html, body { margin: 0 !important; background: #fff !important; }
+  #root { display: none !important; }
+  .print-layer { display: block !important; position: absolute; inset: 0; }
+  .print-layer, .print-layer * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  @page { margin: 0; }
+}
+
+/* Soft, light scrollbars inside studio panels */
+.studio-scroll { scrollbar-width: thin; scrollbar-color: #d8d3c9 transparent; }
+.studio-scroll::-webkit-scrollbar { width: 9px; height: 9px; }
+.studio-scroll::-webkit-scrollbar-thumb { background: #d8d3c9; border-radius: 99px; border: 2px solid transparent; background-clip: padding-box; }
+.studio-scroll::-webkit-scrollbar-thumb:hover { background: #c7c1b5; background-clip: padding-box; }

@@ -1,0 +1,53 @@
+/* =====================================================================
+   Vivace Menu — Design Tokens (single source of styling truth)
+   Every layout (A4.All, A4.L, A4.R, A3.L, A3.R) consumes THESE tokens.
+   A4 -> A3 is purely a --scale change; nothing else differs.
+   ===================================================================== */
+
+:root {
+  /* Brand fonts (PDF fonts were outlined; these are the matched substitutes) */
+  --font-serif: "Playfair Display", "Times New Roman", serif;
+  --font-sans:  "Pretendard", -apple-system, "Apple SD Gothic Neo", sans-serif;
+
+  /* Ink */
+  --c-ink:    #111111;
+  --c-muted:  #6b6b6b;
+  --c-line:   #111111;
+  --c-line-soft: #d8d8d8;
+  --c-badge-bg: #111111;
+  --c-badge-fg: #ffffff;
+  --c-paper:  #ffffff;
+
+  /* Master scale. A4 = 1, A3 = 1.414 (sqrt2). Set per-page. */
+  --scale: 1;
+
+  /* Type scale (px @ A4, multiplied by --scale). Tuned to the originals. */
+  --fs-wordmark:  calc(76px * var(--scale));
+  --fs-section:   calc(23px * var(--scale));
+  --fs-sub:       calc(11px * var(--scale));
+  --fs-item-en:   calc(16px * var(--scale));
+  --fs-item-kr:   calc(12px * var(--scale));
+  --fs-price:     calc(20px * var(--scale));
+  --fs-process:   calc(10px * var(--scale));
+  --fs-desc:      calc(11px * var(--scale));
+  --fs-headline:  calc(11.5px * var(--scale));
+  --fs-long:      calc(10.5px * var(--scale));
+  --fs-foot:      calc(11px * var(--scale));
+  --fs-badge:     calc(7.5px * var(--scale));
+  --fs-note:      calc(9.5px * var(--scale));
+
+  /* Rhythm */
+  --gap-section:   calc(26px * var(--scale));
+  --gap-item:      calc(15px * var(--scale));
+  --gap-item-desc: calc(11px * var(--scale)); /* item rows that carry a description line (tightened) */
+  --gap-below-bev: calc(44px * var(--scale)); /* extra breathing room below Beverage */
+  --gap-col:       calc(40px * var(--scale));
+  --pad-page:      calc(54px * var(--scale));
+  --rule-w:        calc(1.5px * var(--scale));
+
+  --lh-tight: 1.12;
+  --lh-body:  1.5;
+}
+
+/* A3 pages opt in to the larger scale */
+.scale-a3 { --scale: 1.414; }

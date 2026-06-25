@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Build output
+dist/
+**/dist/
+*.tsbuildinfo
+
+# Secrets / local env (anon key is public-safe, but keep real env out of the repo)
+.env
+.env.local
+.env.*.local
+**/.env
+!.env.example
+
+# Local tooling state (gstack browse audit log, etc.)
+.gstack/
+
+# Editor / OS
+.DS_Store
+**/.DS_Store
+*.log
+npm-debug.log*
+.vscode/
+.idea/

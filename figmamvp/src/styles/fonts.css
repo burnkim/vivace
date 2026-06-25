@@ -1,0 +1,7 @@
+/* Base fonts for the Vivace menu system.
+   - Display serif default: Playfair Display
+   - Sans / badges: Inter
+   - Korean fallbacks: Noto Sans KR (sans) + Noto Serif KR (serif)
+   User-selected Google fonts are injected at runtime (see app/menu/fonts.ts).
+   Font imports must stay at the very top of this file. */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&family=Noto+Sans+KR:wght@300;400;500;700&family=Noto+Serif+KR:wght@400;500;600;700&display=swap');

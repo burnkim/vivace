@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 150" fill="#111">
+  <!-- Serif "V" wordmark mark used on the hand-drip (R) panels -->
+  <text x="60" y="92" text-anchor="middle" font-family="Playfair Display, serif"
+        font-weight="800" font-size="110" letter-spacing="-2">V</text>
+  <!-- Droplet beneath -->
+  <path d="M60 104 C53 116 47 122 47 130 a13 13 0 0 0 26 0 c0-8-6-14-13-26 Z"/>
+</svg>

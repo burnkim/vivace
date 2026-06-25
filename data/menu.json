@@ -1,0 +1,135 @@
+{
+  "$schema": "./menu.schema.json",
+  "_meta": {
+    "version": "0.1.0",
+    "currency": "",
+    "priceFormat": "0.0",
+    "note": "Single source of truth for all Vivace menu layouts. Edit here (or via admin panel); all 5 renderings derive from this file."
+  },
+  "_decisions": {
+    "description": "통합 시 확정된 결정 (사용자 확인 완료).",
+    "items": [
+      "Caramel Machiato 포함 (5.0).",
+      "Americano 인라인 take-out 표기 제거 → 에스프레소 각주에 '아메리카노 테이크아웃 : 3.5' 한 줄 추가 (디카페인/샷 추가 사이).",
+      "Beverage 2번째 = Kalona Cocoa / 깔로나 코코아 / 5.5.",
+      "Best 뱃지 = Cafe Latte.",
+      "핸드드립 라인업 = A4.R 최신본 6종이 정본. 앞으로 주로 수정되는 부분.",
+      "원두명 철자는 이 단일 데이터로 통일 (Tres Dragons, Kenya Gathaithi 등)."
+    ]
+  },
+
+  "brand": {
+    "wordmark": "Vivace",
+    "name": "Vivace",
+    "logo": { "wordmarkSvg": "assets/wordmark.svg", "dropletSvg": "assets/droplet.svg" },
+    "roastingNote": {
+      "lead": "비바체에서는 생두가 가진 텍스쳐, 과즙의 단맛, 볼륨감의 밸런스에 집중해서 로스팅하고 있습니다.",
+      "sub": "로스팅 날짜 기준 17~20일 이후, 원두 컨디션에 따라 폐기 처리합니다."
+    }
+  },
+
+  "espresso": {
+    "label": "Coffee",
+    "sublabel": "Espresso Base",
+    "items": [
+      { "id": "espresso",  "en": "Espresso",        "kr": "에스프레소",      "price": 4.0 },
+      { "id": "americano", "en": "Americano",       "kr": "아메리카노",      "price": 4.0 },
+      { "id": "cremoso",   "en": "Cremoso",         "kr": "크레모소",        "price": 4.0 },
+      { "id": "machiato",  "en": "Machiato",        "kr": "마끼아또",        "price": 4.5 },
+      { "id": "bola",      "en": "Bola",            "kr": "볼라",            "price": 4.5, "badge": "signature" },
+      { "id": "flatwhite", "en": "Flat White",      "kr": "플랫 화이트",     "price": 4.5 },
+      { "id": "cappuccino","en": "Cappuccino",      "kr": "카푸치노",        "price": 4.5 },
+      { "id": "caffelatte","en": "Cafe Latte",      "kr": "카페라떼",        "price": 4.5, "badge": "best" },
+      { "id": "caramel",   "en": "Caramel Machiato","kr": "카라멜 마끼아또", "price": 5.0 },
+      { "id": "saigon",    "en": "Saigon Latte",    "kr": "사이공 라떼",     "price": 5.0 },
+      { "id": "vanilla",   "en": "Vanilla Latte",   "kr": "수제 바닐라 라떼","price": 5.0 },
+      { "id": "soy",       "en": "Soy Latte",       "kr": "소이 라떼",       "price": 5.0 }
+    ],
+    "footnotes": ["디카페인 변경 가능합니다.", "아메리카노 테이크아웃 : 3.5", "샷 추가 + 1.0"]
+  },
+
+  "handdrip": {
+    "label": "Filter Coffee",
+    "sublabelShort": "Specialty Hand drip",
+    "sublabelLong": "Hot / Ice",
+    "badge": "best",
+    "footnoteShort": "차갑게도 드실 수 있습니다.",
+    "items": [
+      {
+        "id": "peru-geisha", "on": true,
+        "origin": "Peru", "name": "El Diamante Geisha", "process": "Washed", "price": 6.5,
+        "shortDesc": "아카시아, 꿀, 화사한",
+        "headline": "입안에 피어나는 맑고 화사한 아카시아꽃",
+        "longDesc": "우아한 향기가 열리는 195도의 찰나를 온전히 담아냈습니다. 은은한 아카시아향과 꿀의 늬앙스를 즐겨보세요."
+      },
+      {
+        "id": "colombia-campo", "on": true,
+        "origin": "Colombia", "name": "Campo Hermoso Caturra", "process": "Passion Fruits", "price": 6.5,
+        "shortDesc": "열대과일, 패션후르츠, 쥬시",
+        "headline": "코끝을 스치는 폭발적인 트로피컬 넥타",
+        "longDesc": "밀려오는 짙은 열대과일 향기가 먼저 감각을 자극합니다. 밝게 떨어지는 단맛의 기분 좋은 자극을 경험해 보세요."
+      },
+      {
+        "id": "ethiopia-gersi", "on": true,
+        "origin": "Ethiopia", "name": "Yirgacheffe Gersi G1", "process": "Natural", "price": 6.5,
+        "shortDesc": "핵과류, 포도, 소프트",
+        "headline": "입안 가득 번지는 햇살을 머금은 보라빛 포도",
+        "longDesc": "화사한 들꽃 향기와, 입술을 적시는 달콤한 와인의 풍미가 매혹적입니다. 햇살 아래 바짝 말려 농축된 깊은 단맛이 아주 부드럽고 우아한 여운을 남깁니다."
+      },
+      {
+        "id": "colombia-tresdragons", "on": true,
+        "origin": "Colombia", "name": "Tres Dragons", "process": "Natural", "price": 6.5,
+        "shortDesc": "와인, 포도, 베리, 위스키, 시트러스",
+        "headline": "라즈베리를 띄운 향긋한 위스키 한 잔",
+        "longDesc": "첫 모금에 피어나는 붉은 라즈베리 과즙 뒤로, 초콜릿과 위스키의 깊은 풍미가 우아하게 중심을 잡아줍니다. 카모마일의 은은한 향기가 기분 좋은 위로를 건네는 매혹적인 커피입니다."
+      },
+      {
+        "id": "ethiopia-guji", "on": true,
+        "origin": "Ethiopia", "name": "Guji Dimtu G1", "process": "Natural", "price": 6.0,
+        "shortDesc": "살구, 복숭아, 건과",
+        "headline": "코코아 파우더를 듬뿍 얹은 부드러운 블루베리 트러플",
+        "longDesc": "입안을 포근하게 감싸는 파우더리한 초콜릿 질감이 아주 매력적입니다. 튀지 않는 단정한 산미와 짙은 고소함 속에서, 은은하게 피어나는 블루베리의 향기가 기분 좋은 감칠맛을 선사합니다."
+      },
+      {
+        "id": "kenya-gathaithi", "on": true,
+        "origin": "Kenya", "name": "Gathaithi Nyeri AA", "process": "Full Washed", "price": 6.0,
+        "shortDesc": "라임, 블루베리, 쥬시, 묵직한",
+        "headline": "오랜 열기가 응축된 묵직함, 그리고 생기 넘치는 블루베리",
+        "longDesc": "가볍게 스쳐 가는 맛이 아닌, 입안에 깊고 진하게 남는 바디감. 정성스러운 뜸 들이기가 완성한 묵직한 달콤함 속에서 톡 터지는 과즙의 매력을 만끽해 보세요."
+      }
+    ]
+  },
+
+  "tea": {
+    "label": "Tea",
+    "sublabel": "Hot / Ice",
+    "items": [
+      { "id": "coolherb",  "en": "Cool Herb",    "kr": "쿨 허브 티",   "price": 5.5, "desc": "감초의 단맛, 페퍼민트, 레몬그라스의 화사함" },
+      { "id": "justfruit", "en": "Just Fruit",   "kr": "저스트 프룻 티","price": 5.5, "desc": "수레국화 꽃잎, 포도, 로즈힙, 딸기, 새콤달콤" },
+      { "id": "sandle",    "en": "Sandle Baram", "kr": "산들바람 티",  "price": 5.5, "desc": "그린 루이보스 베이스, 복합적, 상큼함" },
+      { "id": "pinkcloud", "en": "Pink Cloud",   "kr": "분홍구름 티",  "price": 5.5, "desc": "백차의 가볍고 섬세한 맛, 열대과일의 상큼함" }
+    ]
+  },
+
+  "beverage": {
+    "label": "Beverage",
+    "items": [
+      { "id": "londonfog", "en": "London Fog",       "kr": "런던 포그 티",  "price": 5.5, "desc": "베르가못 향의 얼그레이에 따뜻한 우유" },
+      { "id": "kalona",    "en": "Kalona Cocoa",     "kr": "깔로나 코코아", "price": 5.5, "desc": "Extra 100% 코코아" },
+      { "id": "lemonade",  "en": "Fresh Lemon Ade",  "kr": "착즙 레몬 에이드","price": 5.5, "desc": "생레몬을 직접 착즙한 상큼한 에이드" },
+      { "id": "milkysoda", "en": "Vivace Milky Soda","kr": "비바체 밀키 소다","price": 5.5, "desc": "건강한 밀키스" }
+    ]
+  },
+
+  "dessert": {
+    "label": "Dessert",
+    "items": [
+      { "id": "cheesecake", "en": "Vivace Cheese Cake", "kr": "비바체 수제 치즈 케이크", "price": 5.0, "desc": "첨가물을 넣지 않은 치즈 듬뿍 수제 케이크" }
+    ]
+  },
+
+  "blends": [
+    { "key": "A", "title": "Blend", "desc": "초콜릿과 홍차 사이의 은은한 쌉싸래함이 먼저 다가오고 뒤이어 구운 땅콩과 아몬드의 고소함, 살짝 올라오는 꿀의 단맛이 조화롭게 어우러집니다. 묵직한 볼륨감과 바디감, 그리고 끝까지 이어지는 여운과 감칠맛이 특징인 산미없는 원두." },
+    { "key": "B", "title": "Blend", "desc": "고소함과 둥근 산미가 밸런스있고 적당한 볼륨감과 맛의 흐름이 이어지는 재미있는 구조의 풍미가 매력적인 블렌드. 좋은 향미와 오일리한 바디감 그리고 마일드하고 부드러운 마무리가 특징입니다." }
+  ]
+}

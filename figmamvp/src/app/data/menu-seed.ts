@@ -1,0 +1,182 @@
+import type { MenuData } from "./menu-types";
+
+/** Real Vivace menu, transcribed from Vivace_Menu_02_A4.L.pdf and .R.pdf. */
+export const MENU_SEED: MenuData = {
+  sections: [
+    {
+      id: "coffee",
+      titleEn: "Coffee",
+      titleSub: "Espresso Base",
+      note: "⊻ 디카페인 변경 가능합니다.\n⊻ 아메리카노 테이크아웃 : 3.5\n⊻ 샷 추가 + 1.0",
+      items: [
+        { id: "espresso", nameEn: "Espresso", nameKr: "에스프레소", price: "4.0" },
+        { id: "americano", nameEn: "Americano", nameKr: "아메리카노", price: "4.0" },
+        { id: "cremoso", nameEn: "Cremoso", nameKr: "크레모소", price: "4.0" },
+        { id: "machiato", nameEn: "Machiato", nameKr: "마끼아또", price: "4.5" },
+        { id: "bola", nameEn: "Bola", nameKr: "볼라", price: "4.5", badge: "signature" },
+        { id: "flat-white", nameEn: "Flat White", nameKr: "플랫 화이트", price: "4.5" },
+        { id: "cappuccino", nameEn: "Cappuccino", nameKr: "카푸치노", price: "4.5" },
+        { id: "cafe-latte", nameEn: "Cafe Latte", nameKr: "카페라떼", price: "4.5", badge: "best" },
+        { id: "caramel-machiato", nameEn: "Caramel Machiato", nameKr: "카라멜 마끼아또", price: "5.0" },
+        { id: "saigon-latte", nameEn: "Saigon Latte", nameKr: "사이공 라떼", price: "5.0" },
+        { id: "vanilla-latte", nameEn: "Vanilla Latte", nameKr: "수제 바닐라 라떼", price: "5.0" },
+        { id: "soy-latte", nameEn: "Soy Latte", nameKr: "소이 라떼", price: "5.0" },
+      ],
+    },
+    {
+      id: "tea",
+      titleEn: "Tea",
+      titleSub: "Hot / Ice",
+      items: [
+        { id: "cool-herb", nameEn: "Cool Herb", nameKr: "쿨 허브 티", price: "5.5", desc: "감초의 단맛, 페퍼민트, 레몬그라스의 화사함" },
+        { id: "just-fruit", nameEn: "Just Fruit", nameKr: "저스트 프룻 티", price: "5.5", desc: "수레국화 꽃잎, 포도, 로즈힙, 딸기, 새콤달콤" },
+        { id: "sandle-baram", nameEn: "Sandle Baram", nameKr: "산들바람 티", price: "5.5", desc: "그린 루이보스 베이스, 복합적, 상큼함" },
+        { id: "pink-cloud", nameEn: "Pink Cloud", nameKr: "분홍구름 티", price: "5.5", desc: "백차의 가볍고 섬세한 맛, 열대과일의 상큼함" },
+      ],
+    },
+    {
+      id: "beverage",
+      titleEn: "Beverage",
+      items: [
+        { id: "london-fog", nameEn: "London Fog", nameKr: "런던 포그 티", price: "5.5", desc: "베르가못 향의 얼그레이에 따뜻한 우유" },
+        { id: "kalona-cocoa", nameEn: "Kalona Cocoa", nameKr: "깔로나 코코아", price: "5.5", desc: "Extra 100% 코코아" },
+        { id: "fresh-lemon-ade", nameEn: "Fresh Lemon Ade", nameKr: "착즙 레몬 에이드", price: "5.5", desc: "생레몬을 직접 착즙한 상큼한 에이드" },
+        { id: "vivace-milky-soda", nameEn: "Vivace Milky Soda", nameKr: "비바체 밀키 소다", price: "5.5", desc: "건강한 밀키스" },
+      ],
+    },
+    {
+      id: "dessert",
+      titleEn: "Dessert",
+      items: [
+        { id: "vivace-cheese-cake", nameEn: "Vivace Cheese Cake", nameKr: "비바체 수제 치즈 케이크", price: "5.0", desc: "첨가물을 넣지 않은 치즈 듬뿍 수제 케이크" },
+      ],
+    },
+  ],
+  blends: [
+    {
+      id: "blend-a",
+      label: "[A] Blend",
+      desc: "초콜릿과 홍차 사이의 은은한 쌉싸래함이 먼저 다가오고 뒤이어 구운 땅콩과 아몬드의 고소함, 살짝 올라오는 꿀의 단맛이 조화롭게 어우러집니다. 묵직한 볼륨감과 바디감, 그리고 끝까지 이어지는 여운과 감칠맛이 특징인 산미없는 원두",
+    },
+    {
+      id: "blend-b",
+      label: "[B] Blend",
+      desc: "고소함과 둥근 산미가 밸런스있고 적당한 볼륨감과 맛의 흐름이 이어지는 재미있는 구조의 풍미가 매력적인 블렌드. 좋은 향미와 오일리한 바디감 그리고 마일드하고 부드러운 마무리가 특징입니다.",
+    },
+  ],
+  handdrip: {
+    titleEn: "Filter Coffee",
+    titleSub: "Hot / Ice",
+    badge: "best",
+    footerNote:
+      "비바체에서는 생두가 가진 텍스쳐, 과즙의 단맛, 볼륨감의 밸런스에 집중해서 로스팅하고 있습니다.\n로스팅 날짜 기준 17~20일 이후, 원두 컨디션에 따라 폐기 처리합니다.",
+    beans: [
+      {
+        id: "peru-geisha",
+        nameEn: "Peru El Diamante Geisha",
+        grade: "Washed",
+        price: "6.5",
+        headCopy: "입안에 피어나는 맑고 화사한 아카시아꽃",
+        desc: "우아한 향기가 열리는 195도의 찰나를 온전히 담아냈습니다.\n은은한 아카시아향과 꿀의 늬앙스를 즐겨보세요.",
+      },
+      {
+        id: "colombia-campo",
+        nameEn: "Colombia Campo Hermoso Caturra",
+        grade: "Passion Fruits",
+        price: "6.5",
+        headCopy: "코끝을 스치는 폭발적인 트로피컬 넥타",
+        desc: "밀려오는 짙은 열대과일 향기가 먼저 감각을 자극합니다.\n밝게 떨어지는 단맛의 기분 좋은 자극을 경험해 보세요.",
+      },
+      {
+        id: "ethiopia-yirga",
+        nameEn: "Ethiopia Yirgacheffe Gersi G1",
+        grade: "Natural",
+        price: "6.5",
+        headCopy: "입안 가득 번지는 햇살을 머금은 보라빛 포도",
+        desc: "화사한 들꽃 향기와, 입술을 적시는 달콤한 와인의 풍미가 매혹적입니다.\n햇살 아래 바짝 말려 농축된 깊은 단맛이 아주 부드럽고 우아한 여운을 남깁니다.",
+      },
+      {
+        id: "colombia-potosi",
+        nameEn: "Colombia Potosi Tres Dragons",
+        grade: "Natural",
+        price: "6.5",
+        headCopy: "라즈베리를 띄운 향긋한 위스키 한 잔",
+        desc: "첫 모금에 피어나는 붉은 라즈베리 과즙 뒤로, 초콜릿과 위스키의 깊은 풍미가 우아하게 중심을 잡아줍니다.\n카모마일의 은은한 향기가 기분 좋은 위로를 건네는 매혹적인 커피입니다.",
+      },
+      {
+        id: "ethiopia-guji",
+        nameEn: "Ethiopia Guji Dimtu G1",
+        grade: "Natural",
+        price: "6.0",
+        headCopy: "코코아 파우더를 듬뿍 얹은 부드러운 블루베리 트러플",
+        desc: "입안을 포근하게 감싸는 파우더리한 초콜릿 질감이 아주 매력적입니다.\n튀지 않는 단정한 산미와 짙은 고소함 속에서, 은은하게 피어나는 블루베리의 향기가 기분 좋은 감칠맛을 선사합니다.",
+      },
+      {
+        id: "kenya-gathaithi",
+        nameEn: "Kenya Gathaithi Nyeri AA",
+        price: "6.0",
+        headCopy: "오랜 열기가 응축된 묵직함, 그리고 생기 넘치는 블루베리",
+        desc: "가볍게 스쳐 가는 맛이 아닌, 입안에 깊고 진하게 남는 바디감.\n정성스러운 뜸 들이기가 완성한 묵직한 달콤함 속에서 톡 터지는 과즙의 매력을 만끽해 보세요.",
+      },
+    ],
+  },
+  notes: {
+    espresso: "⊻ 디카페인 변경 가능합니다.\n⊻ 아메리카노 테이크아웃 : 3.5\n⊻ 샷 추가 + 1.0",
+  },
+  config: {
+    style: {
+      titleFont: "Playfair Display",
+      bodyFont: "Noto Sans KR",
+      groupGap: 72,
+      itemGap: 30,
+      lineHeight: 1.4,
+      showBlends: true,
+      pagePadX: 150,
+      pagePadY: 170,
+      columnGap: 56,
+    },
+    layouts: {
+      // Main menu: two columns, both stretched to fill the sheet.
+      a4l: {
+        rows: [
+          {
+            id: "row-main",
+            grow: true,
+            columns: [
+              { id: "col-l", align: "between", groups: ["section:coffee", "blend:blend-a"] },
+              { id: "col-r", align: "between", groups: ["section:tea", "section:beverage", "section:dessert", "blend:blend-b"] },
+            ],
+          },
+        ],
+      },
+      // Hand drip: single column.
+      a4r: {
+        rows: [
+          {
+            id: "row-hd",
+            grow: true,
+            columns: [{ id: "col-hd", align: "start", groups: ["handdrip"] }],
+          },
+        ],
+      },
+      // Everything on one sheet: two columns on top, full-width compact hand drip below.
+      a4all: {
+        rows: [
+          {
+            id: "row-top",
+            grow: true,
+            columns: [
+              { id: "col-l", align: "start", groups: ["section:coffee", "blend:blend-a"] },
+              { id: "col-r", align: "start", groups: ["section:tea", "section:beverage", "section:dessert", "blend:blend-b"] },
+            ],
+          },
+          {
+            id: "row-bottom",
+            grow: false,
+            columns: [{ id: "col-hd", align: "start", groups: ["handdrip-compact"] }],
+          },
+        ],
+      },
+    },
+  },
+};
