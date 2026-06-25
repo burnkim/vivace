@@ -1,20 +1,17 @@
 import type { MenuDocument } from "../core/types";
+import { SUPABASE_URL, SUPABASE_ANON, SUPABASE_FUNCTION, isRemoteEnabled } from "./supabase";
 
 /**
- * Supabase sync for the studio document. Opt-in via env (VITE_SUPABASE_URL +
- * VITE_SUPABASE_ANON_KEY); local-first otherwise. Reuses the deployed Hono edge
- * function's /menu key. loadRemote only returns a value that is actually a
- * studio document (has `pages`), so legacy data on the same key is ignored
- * rather than corrupting the studio.
+ * Supabase sync for the studio document via the deployed Hono edge function's
+ * /menu key. Connection config lives in ./supabase (with a public-by-design
+ * fallback so deployed builds always reach the cloud). loadRemote only returns
+ * a value that is actually a studio document (has `pages`), so legacy data on
+ * the same key is ignored rather than corrupting the studio.
  */
-const URL_ENV = import.meta.env.VITE_SUPABASE_URL as string | undefined;
-const KEY_ENV = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
-const FUNCTION = (import.meta.env.VITE_SUPABASE_FUNCTION as string | undefined) ?? "make-server-aabb2e08";
+const BASE = `${SUPABASE_URL}/functions/v1/${SUPABASE_FUNCTION}`;
+const headers = { "Content-Type": "application/json", Authorization: `Bearer ${SUPABASE_ANON}` };
 
-const BASE = URL_ENV ? `${URL_ENV.replace(/\/$/, "")}/functions/v1/${FUNCTION}` : "";
-const headers = { "Content-Type": "application/json", Authorization: `Bearer ${KEY_ENV ?? ""}` };
-
-export const isRemoteEnabled = () => Boolean(URL_ENV && KEY_ENV);
+export { isRemoteEnabled };
 
 function isStudioDoc(v: unknown): v is MenuDocument {
   return !!v && typeof v === "object" && Array.isArray((v as MenuDocument).pages) && Array.isArray((v as MenuDocument).fonts);

@@ -1,5 +1,6 @@
 import type { MenuDocument } from "../core/types";
 import { walk } from "../core/doc";
+import { SUPABASE_URL, SUPABASE_ANON, isRemoteEnabled } from "./supabase";
 
 /**
  * Projects the menu document into proper Supabase tables (via PostgREST) so the
@@ -11,16 +12,14 @@ import { walk } from "../core/doc";
  *   menu_items      — every menu item as a row (section, names, price, badge)
  *   beans           — the hand-drip bean roster as rows (order, hidden, copy)
  */
-const URL_ENV = import.meta.env.VITE_SUPABASE_URL as string | undefined;
-const KEY_ENV = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
-const REST = URL_ENV ? `${URL_ENV.replace(/\/$/, "")}/rest/v1` : "";
+const REST = `${SUPABASE_URL}/rest/v1`;
 const headers: Record<string, string> = {
-  apikey: KEY_ENV ?? "",
-  Authorization: `Bearer ${KEY_ENV ?? ""}`,
+  apikey: SUPABASE_ANON,
+  Authorization: `Bearer ${SUPABASE_ANON}`,
   "Content-Type": "application/json",
 };
 
-export const tablesEnabled = () => Boolean(URL_ENV && KEY_ENV);
+export const tablesEnabled = isRemoteEnabled;
 
 // Goes true after a 404 (tables not created yet) so we stop retrying / log spam.
 let missing = false;
