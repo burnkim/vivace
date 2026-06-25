@@ -6,7 +6,7 @@
   "description": "Vivace Menu Studio — composable, block-based menu design + management system (SaaS-grade). The Figma MVP in ./figmamvp is reference only.",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -p tsconfig.json --noEmit && vite build",
     "preview": "vite preview",
     "legacy:dev": "cd figmamvp && npm run dev"
   },
