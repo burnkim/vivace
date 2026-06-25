@@ -241,7 +241,10 @@ function SectionContent({ block, badgeOpts }: { block: SectionBlock; badgeOpts: 
           <Field label="부제"><TextInput value={block.titleSub ?? ""} onChange={(v) => upd((b) => void (b.titleSub = v || undefined))} /></Field>
         </Row>
         <Field label="뱃지"><Select value={block.badge ?? ""} onChange={(v) => upd((b) => void (b.badge = v || undefined))} options={badgeOpts} /></Field>
-        <Field label="안내문"><TextArea value={block.note ?? ""} rows={3} onChange={(v) => upd((b) => void (b.note = v || undefined))} /></Field>
+        <Field label="안내문" hint="띄어쓰기를 여러 칸 하면 그대로 띄어집니다"><TextArea value={block.note ?? ""} rows={3} onChange={(v) => upd((b) => void (b.note = v || undefined))} /></Field>
+        <Field label="안내문 정렬">
+          <Segmented value={block.noteStyle?.textAlign ?? "right"} onChange={(v) => upd((b) => { (b.noteStyle ??= {}).textAlign = v; })} options={[{ value: "left", label: "좌" }, { value: "center", label: "중앙" }, { value: "right", label: "우" }]} />
+        </Field>
       </Collapsible>
       <Collapsible title="섹션 글자 크기 (이 섹션 일괄)">
         <Row>
@@ -380,7 +383,10 @@ function HandDripContent({ block, badgeOpts }: { block: HandDripBlock; badgeOpts
             ))}
           </div>
         )}
-        <Field label="하단 안내문"><TextArea value={block.footerNote ?? ""} rows={3} onChange={(v) => upd((b) => void (b.footerNote = v || undefined))} /></Field>
+        <Field label="하단 안내문" hint="띄어쓰기를 여러 칸 하면 그대로 띄어집니다"><TextArea value={block.footerNote ?? ""} rows={3} onChange={(v) => upd((b) => void (b.footerNote = v || undefined))} /></Field>
+        <Field label="안내문 정렬">
+          <Segmented value={block.footerStyle?.textAlign ?? "left"} onChange={(v) => upd((b) => { (b.footerStyle ??= {}).textAlign = v; })} options={[{ value: "left", label: "좌" }, { value: "center", label: "중앙" }, { value: "right", label: "우" }]} />
+        </Field>
       </Collapsible>
 
       <Collapsible title="글자 크기 (이 블록 일괄)" defaultOpen={false}>

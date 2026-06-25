@@ -116,6 +116,7 @@ export interface SectionBlock extends BaseBlock {
   itemStyle?: Style; // item English name
   priceStyle?: Style; // price
   descStyle?: Style; // description line
+  noteStyle?: Style; // the note/안내문 (align, size); defaults to right-aligned
   /** When set, the ITEMS are shared (auto-synced, read-only here) from another
       section — e.g. the "A4 전체" overview pulls the A4 좌 menu so editing the
       menu once updates both layouts. `items` is ignored while this is set. */
@@ -159,6 +160,7 @@ export interface HandDripBlock extends BaseBlock {
   priceStyle?: Style; // price
   headStyle?: Style; // head copy
   descStyle?: Style; // description
+  footerStyle?: Style; // the footer note/안내문 (align, size); defaults left
   /** In compact display, which fields to render (see CompactShow). */
   compactShow?: CompactShow;
   /** When set, beans are SHARED (auto-synced, read-only here) from another

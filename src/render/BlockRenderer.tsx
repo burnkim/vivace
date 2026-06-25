@@ -122,7 +122,7 @@ function SectionView({ block, flow }: { block: SectionBlock; flow?: Flow }) {
       </div>
 
       {block.note && (
-        <div style={{ marginTop: px(10), textAlign: "right", fontSize: px(tokens.font.note), color: tokens.color.ink, whiteSpace: "pre-line", lineHeight: 1.5, fontFamily: body }}>
+        <div style={{ marginTop: px(10), textAlign: block.noteStyle?.textAlign ?? "right", fontSize: px(block.noteStyle?.fontSize ?? tokens.font.note), color: tokens.color.ink, whiteSpace: "pre-wrap", lineHeight: 1.5, fontFamily: body }}>
           {block.note}
         </div>
       )}
@@ -224,7 +224,7 @@ function HandDripView({ block, flow }: { block: HandDripBlock; flow?: Flow }) {
       </div>
 
       {block.footerNote && (
-        <div style={{ marginTop: px(20), fontSize: px(tokens.font.note), color: tokens.color.muted, whiteSpace: "pre-line", lineHeight: 1.5, fontFamily: body }}>{block.footerNote}</div>
+        <div style={{ marginTop: px(20), textAlign: block.footerStyle?.textAlign ?? "left", fontSize: px(block.footerStyle?.fontSize ?? tokens.font.note), color: tokens.color.muted, whiteSpace: "pre-wrap", lineHeight: 1.5, fontFamily: body }}>{block.footerNote}</div>
       )}
     </div>
   );
@@ -268,7 +268,7 @@ function TextView({ block, flow }: { block: TextBlock; flow?: Flow }) {
     fontSize: tokens.font.text * scale,
     lineHeight: 1.5,
     color: tokens.color.ink,
-    whiteSpace: "pre-line",
+    whiteSpace: "pre-wrap",
   };
   return (
     <div {...chrome} style={{ ...base, ...flow, ...resolveStyle(block.style, tokens, scale) }}>
