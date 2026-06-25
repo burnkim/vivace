@@ -4,10 +4,18 @@ import type { BadgeDef, FontDef, MenuDocument } from "../core/types";
 import { uid } from "../core/doc";
 import { badgeStyle } from "../render/badge";
 import { hashPin } from "../PinGate";
+import { listBackups, createBackup, deleteBackup, backupSummary, type Backup } from "../lib/backups";
 import { useStudio } from "../state/store";
 import { Field, NumInput, Range, Row, Segmented, Select, ColorInput, TextInput } from "./controls";
 
-type Tab = "fonts" | "badges" | "type" | "security";
+type Tab = "fonts" | "badges" | "type" | "security" | "backups";
+
+/** Date label for a backup (local time). */
+export function fmtBackupDate(ts: number): string {
+  const d = new Date(ts);
+  const p = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}.${p(d.getMonth() + 1)}.${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
+}
 
 /** Renders inside the right panel (replaces the inspector) so edits preview live
     on the canvas. */
@@ -20,8 +28,8 @@ export function DocSettings({ onClose }: { onClose: () => void }) {
         <button onClick={onClose} title="닫기 (인스펙터로)" className="rounded p-1 text-[#837e74] hover:bg-[#f1eee8] hover:text-[#2a2723]"><X className="size-4" /></button>
       </div>
       <div className="flex gap-1 border-b border-[#ebe7df] px-3 py-2">
-        {([["type", "타입"], ["fonts", "폰트"], ["badges", "뱃지"], ["security", "보안"]] as [Tab, string][]).map(([t, label]) => (
-          <button key={t} onClick={() => setTab(t)} className={`flex-1 whitespace-nowrap rounded-md px-2 py-1 text-[12px] transition-colors ${tab === t ? "bg-[#f6ece4] font-medium text-[#a94e31]" : "text-[#837e74] hover:bg-[#f4f2ed]"}`}>{label}</button>
+        {([["type", "타입"], ["fonts", "폰트"], ["badges", "뱃지"], ["security", "보안"], ["backups", "백업"]] as [Tab, string][]).map(([t, label]) => (
+          <button key={t} onClick={() => setTab(t)} className={`flex-1 whitespace-nowrap rounded-md px-1.5 py-1 text-[12px] transition-colors ${tab === t ? "bg-[#f6ece4] font-medium text-[#a94e31]" : "text-[#837e74] hover:bg-[#f4f2ed]"}`}>{label}</button>
         ))}
       </div>
       <div className="studio-scroll min-h-0 flex-1 overflow-y-auto p-3">
@@ -29,6 +37,7 @@ export function DocSettings({ onClose }: { onClose: () => void }) {
         {tab === "fonts" && <FontsTab />}
         {tab === "badges" && <BadgesTab />}
         {tab === "security" && <SecurityTab />}
+        {tab === "backups" && <BackupsTab />}
       </div>
     </div>
   );
@@ -222,6 +231,58 @@ function SecurityTab() {
       </button>
       {done && <p className="text-center text-[12px] font-medium text-[#1d8f5e]">✓ 변경되었습니다. 다음 접속부터 적용돼요.</p>}
       <p className="text-[10px] leading-relaxed text-[#9a958b]">참고: 링크를 아는 사람은 누구나 접속 화면까지는 볼 수 있고, 이 비밀번호로만 안쪽이 열립니다. 가벼운 잠금이라 완벽한 보안은 아니에요(메뉴 데이터 자체는 공개 키로 읽힘).</p>
+    </div>
+  );
+}
+
+/* --------------------------------------------------------------- Backups -- */
+
+function BackupsTab() {
+  const restoreDoc = useStudio((s) => s.restoreDoc);
+  const [list, setList] = useState<Backup[]>(() => listBackups());
+  const [saved, setSaved] = useState(false);
+  const refresh = () => setList(listBackups());
+
+  const save = () => {
+    createBackup(useStudio.getState().doc);
+    refresh();
+    setSaved(true);
+    setTimeout(() => setSaved(false), 1800);
+  };
+  const restore = (b: Backup) => {
+    if (!confirm(`${fmtBackupDate(b.ts)} 백업으로 되돌릴까요?\n\n지금 메뉴가 이 백업 내용으로 바뀝니다. (되돌리기 전에 '현재 상태 백업'을 먼저 눌러두면 더 안전해요.)`)) return;
+    restoreDoc(b.doc);
+  };
+  const del = (b: Backup) => {
+    if (!confirm(`${fmtBackupDate(b.ts)} 백업을 삭제할까요? 되돌릴 수 없습니다.`)) return;
+    deleteBackup(b.id);
+    refresh();
+  };
+
+  return (
+    <div className="space-y-3">
+      <p className="rounded-md bg-[#faf1e7] px-3 py-2 text-[11px] leading-relaxed text-[#a6712f]">
+        지금 메뉴 상태를 <b>날짜별로 저장</b>해 둡니다. 실수로 지웠을 때 그 시점으로 <b>되돌릴</b> 수 있어요. (이 기기에 보관 · 복원/삭제는 관리자 전용)
+      </p>
+      <button onClick={save} className="w-full rounded-md bg-[#c2603f] py-2 text-[13px] font-semibold text-white transition-colors hover:bg-[#a94e31]">
+        {saved ? "✓ 백업 저장됨" : "현재 상태 백업 저장"}
+      </button>
+      <div className="space-y-1.5 pt-1">
+        {list.length === 0 ? (
+          <p className="py-6 text-center text-[11px] text-[#9a958b]">아직 저장된 백업이 없습니다.</p>
+        ) : (
+          list.map((b) => (
+            <div key={b.id} className="flex items-center gap-2 rounded-md border border-[#e6e2da] bg-[#faf9f6] px-3 py-2">
+              <div className="min-w-0 flex-1">
+                <div className="text-[12px] font-medium text-[#2a2723]">{fmtBackupDate(b.ts)}</div>
+                <div className="text-[10px] text-[#9a958b]">{backupSummary(b.doc)}</div>
+              </div>
+              <button onClick={() => restore(b)} className="shrink-0 rounded-md border border-[#e6e2da] bg-white px-2.5 py-1 text-[11px] font-medium text-[#45413a] hover:border-[#c2603f] hover:text-[#a94e31]">복원</button>
+              <button onClick={() => del(b)} title="삭제" className="shrink-0 rounded p-1 text-[#c84a30] hover:bg-[#f8e9e4]"><Trash2 className="size-3.5" /></button>
+            </div>
+          ))
+        )}
+      </div>
     </div>
   );
 }

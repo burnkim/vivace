@@ -43,7 +43,25 @@ function migrateDoc(doc: MenuDocument): MenuDocument {
       }
     }
   }
-  doc.schemaVersion = 3;
+  // v4: ONE source of menu data. A4 전체 shares A4 좌's sections (itemsFrom, by
+  // title) and A4 우's beans (beansFrom), and its now-dormant duplicate copies
+  // are cleared. Self-healing: any stale doc converges to the single source.
+  if (v < 4) {
+    const a4all = doc.pages.find((p) => p.id === "a4all");
+    const a4l = doc.pages.find((p) => p.id === "a4l");
+    const a4r = doc.pages.find((p) => p.id === "a4r");
+    if (a4all && a4l) {
+      const lByTitle: Record<string, string> = {};
+      walk(a4l.root, (b) => { if (b.type === "section") lByTitle[b.titleEn] = b.id; });
+      let rHd: string | undefined;
+      if (a4r) walk(a4r.root, (b) => { if (b.type === "handdrip") rHd = b.id; });
+      walk(a4all.root, (b) => {
+        if (b.type === "section" && lByTitle[b.titleEn]) { b.itemsFrom = lByTitle[b.titleEn]; b.items = []; }
+        if (b.type === "handdrip" && rHd) { b.beansFrom = rHd; b.beans = []; }
+      });
+    }
+  }
+  doc.schemaVersion = 4;
   return doc;
 }
 
@@ -88,6 +106,8 @@ interface StudioState {
   /** Replace a page's whole content with a deep copy of another page's. The
       target keeps its own paper/scale, so an A4 layout copied to A3 just scales up. */
   copyPageContent: (fromId: string, toId: string) => void;
+  /** Replace the whole document (e.g. restoring a backup). Migrated + cloned. */
+  restoreDoc: (doc: MenuDocument) => void;
 
   resetDoc: () => void;
 
@@ -208,6 +228,15 @@ export const useStudio = create<StudioState>()(
         const to = s.doc.pages.find((p) => p.id === toId);
         if (!to) return;
         to.root = clone;
+        s.selectedId = null;
+        s.doc.updatedAt = Date.now();
+      });
+    },
+
+    restoreDoc: (doc) => {
+      const fresh = migrateDoc(structuredClone(doc));
+      set((s) => {
+        s.doc = fresh;
         s.selectedId = null;
         s.doc.updatedAt = Date.now();
       });
