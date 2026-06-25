@@ -10,6 +10,7 @@ import { useStudio } from "../state/store";
 import type { SyncStatus } from "../state/store";
 import { walk, uid } from "../core/doc";
 import { createBackup } from "../lib/backups";
+import { BrandMark } from "../Brand";
 import type { Bean, GroupBlock, HandDripBlock, MenuDocument, MenuItem, SectionBlock, TextBlock } from "../core/types";
 import { PageSheet, ScaleToFit, pageSizePx } from "../render/Page";
 import { ExportModal } from "./ExportModal";
@@ -85,7 +86,7 @@ export function EditMode() {
       <header className="sticky top-0 z-10 border-b border-[#e6e2da] bg-white/95 backdrop-blur">
         <div className="flex items-center justify-between gap-2 px-4 py-2.5">
           <div className="flex items-center gap-2.5">
-            <div className="flex size-7 items-center justify-center rounded-lg bg-[#c2603f] text-white shadow-sm" style={{ fontFamily: "'Playfair Display', serif", fontWeight: 800, fontSize: 16, lineHeight: 1 }}>V</div>
+            <BrandMark size={28} />
             <div className="leading-tight">
               <div className="text-[15px] font-semibold text-[#2a2723]">메뉴 수정</div>
               <SyncLine status={syncStatus} />

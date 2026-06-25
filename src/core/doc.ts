@@ -74,6 +74,19 @@ export function resolveItems(block: SectionBlock, rosters: Record<string, MenuIt
   return (block.itemsFrom && rosters[block.itemsFrom]) || block.items;
 }
 
+/** Brand images taken from the menu itself: A4 좌's top wordmark + A4 우's mark.
+    Used so the app chrome (header, lock screen) matches the printed logo. */
+export function brandLogos(doc: MenuDocument): { wordmark?: string; symbol?: string } {
+  const firstImage = (pageId: string): string | undefined => {
+    const p = doc.pages.find((x) => x.id === pageId);
+    if (!p) return undefined;
+    let src: string | undefined;
+    walk(p.root, (b) => { if (!src && b.type === "image" && b.src) src = b.src; });
+    return src;
+  };
+  return { wordmark: firstImage("a4l"), symbol: firstImage("a4r") };
+}
+
 /** The effective content root for a page — follows `mirror` so A3 shows A4's tree. */
 export function pageRoot(doc: MenuDocument, page: Page): GroupBlock {
   if (page.mirror) {

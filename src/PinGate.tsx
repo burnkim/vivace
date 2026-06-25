@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { Delete } from "lucide-react";
 import { useStudio } from "./state/store";
+import { BrandMark } from "./Brand";
 
 /** SHA-256 of `vivace:000000` — the default PIN when none has been set. */
 export const DEFAULT_PIN_HASH = "235e41fdfea3b1b1872922ee7cff03c83cdde8de116c19e83b7577fd1899dccf";
@@ -69,7 +70,7 @@ function LockScreen({ loading, target, onUnlock }: { loading: boolean; target: s
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-[#f3f1ec] px-6 text-[#2a2723]">
       <div className="flex w-full max-w-[320px] flex-col items-center">
-        <div className="mb-5 flex size-12 items-center justify-center rounded-2xl bg-[#c2603f] text-white shadow-sm" style={{ fontFamily: "'Playfair Display', serif", fontWeight: 800, fontSize: 26, lineHeight: 1 }}>V</div>
+        <div className="mb-5"><BrandMark size={52} /></div>
         <div className="text-[16px] font-semibold">Vivace 메뉴</div>
         <div className="mb-7 mt-1 text-[13px] text-[#837e74]">{loading ? "불러오는 중…" : error ? "비밀번호가 틀렸습니다" : "비밀번호 6자리를 입력하세요"}</div>
 

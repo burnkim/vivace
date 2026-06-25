@@ -8,6 +8,16 @@ import { pageMm } from "../core/tokens";
 /** Native canvas is 300 DPI px; this scale maps it to CSS px (= mm-accurate). */
 const PRINT_SCALE = 96 / 300;
 
+/** Default save-as filename per page (the browser uses document.title). */
+const FILENAME: Record<string, string> = {
+  a4all: "Vivace_Menu_01A4All",
+  a4l: "Vivace_Menu_02A4L",
+  a4r: "Vivace_Menu_03A4R",
+  a3l: "Vivace_Menu_04A3L",
+  a3r: "Vivace_Menu_05A3R",
+};
+const fileNameFor = (p: { id: string; name: string }) => FILENAME[p.id] ?? `Vivace_Menu_${p.name.replace(/[^\w가-힣]+/g, "")}`;
+
 export function ExportModal({ onClose }: { onClose: () => void }) {
   const doc = useStudio((s) => s.doc);
   const [selected, setSelected] = useState<Set<string>>(() => new Set());
@@ -43,11 +53,15 @@ export function ExportModal({ onClose }: { onClose: () => void }) {
       document.head.appendChild(style);
     }
     style.textContent = `@page{size:${mm.w}mm ${mm.h}mm;margin:0}`;
-    const done = () => setQueue((q) => q.slice(1)); // advance to the next page
+    // The browser's "Save as PDF" default filename = document.title.
+    const prevTitle = document.title;
+    document.title = fileNameFor(page);
+    const done = () => { document.title = prevTitle; setQueue((q) => q.slice(1)); }; // advance to next page
     window.addEventListener("afterprint", done, { once: true });
     const t = setTimeout(() => window.print(), 200); // let the print layer paint first
     return () => {
       clearTimeout(t);
+      document.title = prevTitle;
       window.removeEventListener("afterprint", done);
     };
   }, [page]);

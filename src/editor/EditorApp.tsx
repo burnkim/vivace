@@ -1,6 +1,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Columns2, Eye, FileDown, Pencil, RotateCcw, SlidersHorizontal, Smartphone, Layers, X } from "lucide-react";
 import { useStudio } from "../state/store";
+import { BrandMark, BrandWordmark } from "../Brand";
 import { Canvas, PairCanvas } from "./Canvas";
 import { LayersPanel } from "./LayersPanel";
 import { Inspector } from "./Inspector";
@@ -51,9 +52,9 @@ export function EditorApp() {
       {/* Header */}
       <header className="flex h-14 shrink-0 items-center justify-between gap-2 border-b border-[#e6e2da] bg-white px-2 md:px-4">
         <div className="flex min-w-0 items-center gap-2 md:gap-3">
-          <div className="flex shrink-0 items-center gap-2.5">
-            <div className="flex size-7 items-center justify-center rounded-lg bg-[#c2603f] text-white shadow-sm" style={{ fontFamily: "'Playfair Display', serif", fontWeight: 800, fontSize: 16, lineHeight: 1 }}>V</div>
-            <span style={{ fontFamily: "'Playfair Display', serif" }} className="hidden text-[19px] font-bold tracking-tight text-[#2a2723] sm:inline">Vivace</span>
+          <div className="flex shrink-0 items-center gap-2">
+            <BrandMark size={28} />
+            <span className="hidden sm:block"><BrandWordmark height={20} /></span>
           </div>
           <div className="hidden h-5 w-px shrink-0 bg-[#e6e2da] md:block" />
           <div className="studio-scroll flex items-center gap-1 overflow-x-auto rounded-lg bg-[#f0ede7] p-0.5">
